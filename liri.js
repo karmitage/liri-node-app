@@ -7,12 +7,12 @@ var keys = require("./keys.js");
 var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var axios = require('axios');
+var fs = require("fs");
 
 //create an array to hold the possible command line arguments
 var inputArray = ['concert-this', 'spotify-this-song', 'movie-this', 'do-what-it-says'];
 
 //use a switch statement to parse the various input cases
-
 switch (process.argv[2]) {
     //bands in town 
     case inputArray[0]:
@@ -36,12 +36,10 @@ switch (process.argv[2]) {
         break;
     //no input
     case inputArray[3]:
-        //use random.txt
-        console.log("random.txt");
+        doWhatItSays();
         break;
     default:
-        console.log('hi');
-
+        console.log('Try again!');
 }
 
 //functions for each type of request
@@ -108,11 +106,9 @@ function concertThis(input) {
 
 function spotifyThisSong(input) {
     var song = input;
-    console.log("first the song is: " + song);
     if (song === 'undefined' || null || song === '') {
         song = "The Sign";
     }
-    console.log("now the song is: " + song);
     spotify.search({ type: 'track', query: song }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
@@ -169,6 +165,26 @@ function movieThis(input) {
             }
             console.log(error.config);
         });
+}
+
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        var dataArr = data.split(",");
+        //create a random number between 1 and 3 & choose one of the APIs based on the result
+        var randNum = Math.floor(Math.random() * Math.floor(3));
+        if (randNum === 0) {
+            spotifyThisSong(dataArr[1]);
+        } else if (randNum === 1) {
+            movieThis(dataArr[3]);
+        } else {
+            query = dataArr[5].replace(/"/g, ''); //remove quotes from string
+            concertThis(query);
+        }
+
+    });
 }
 
 //function to parse artist/song/movie inputs (handles inputs that aren't in quotes
