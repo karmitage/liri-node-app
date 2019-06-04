@@ -46,8 +46,7 @@ function concertThis(input) {
     //construct query URL
     var queryURL = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
     axios.get(queryURL).then(function (response) {
-        // If the axios was successful...then show info
-        console.log(response.data[0]);
+
         var timeFormat = "MM/DD/YYYY"
         //since resopnse.data is structured as an array, iterate over it to get at the 
         //event values for each item
