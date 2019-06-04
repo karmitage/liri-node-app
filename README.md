@@ -34,3 +34,5 @@ The program uses three APIs to retrieve information:
 ## Other notes
 
 In order to run this application, other users will need to configure their own Spotify ID & Secret using the Spotify API. These values are in a .env file that maps the values to variable names, which are then accessed via the keys.js file.
+
+To see the functionality of the project, see the screenshots in the 'assets' folder.

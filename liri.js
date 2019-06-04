@@ -1,4 +1,6 @@
 
+//see updated profile here: https://karmitage.github.io/Responsive-Portfolio/portfolio.html
+
 //require env file to handle environment variables
 require("dotenv").config();
 var moment = require('moment');
