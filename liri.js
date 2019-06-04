@@ -19,14 +19,12 @@ switch (process.argv[2]) {
         //create a variable to hold the band name
         var artist = parseArg(process.argv);
         //call the bandsinTown function
-        console.log("artist is:" + artist)
         concertThis(artist);
         break;
     //other cases follow the same process:
     //spotify
     case inputArray[1]:
         var song = parseArg(process.argv);
-        console.log("the song " + song);
         spotifyThisSong(song);
         break;
     //OMDB
@@ -88,8 +86,6 @@ function concertThis(input) {
     })
         .catch(function (error) {
             if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
@@ -106,6 +102,7 @@ function concertThis(input) {
 
 function spotifyThisSong(input) {
     var song = input;
+    //display results for "The Sign" if no input was given
     if (song === 'undefined' || null || song === '') {
         song = "The Sign";
     }
@@ -118,8 +115,6 @@ function spotifyThisSong(input) {
             for (i = 0; i < data.tracks.items.length && i < 10; i++) {
 
                 var musicQuery = data.tracks.items[i];
-                // console.log("===============================");
-                // * Artist(s)
                 console.log("Artist: " + musicQuery.artists[0].name +
                     "\nSong: " + musicQuery.name +
                     "\nLink to Song: " + musicQuery.preview_url +
@@ -133,6 +128,7 @@ function spotifyThisSong(input) {
 
 function movieThis(input) {
     var movie = input;
+    //display results for Mr Nobody if no input was given
     if (movie === 'undefined' || null || movie === '') {
         movie = 'Mr. Nobody'
     }
@@ -180,7 +176,7 @@ function doWhatItSays() {
         } else if (randNum === 1) {
             movieThis(dataArr[3]);
         } else {
-            query = dataArr[5].replace(/"/g, ''); //remove quotes from string
+            query = dataArr[5].replace(/"/g, ''); //remove quotes from string (bands in town is finicky)
             concertThis(query);
         }
 
