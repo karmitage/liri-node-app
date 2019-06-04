@@ -19,7 +19,8 @@ switch (process.argv[2]) {
         //create a variable to hold the band name
         var artist = parseArg(process.argv);
         //call the bandsinTown function
-        bandsInTown(artist);
+        console.log("artist is:" + artist)
+        concertThis(artist);
         break;
     //other cases follow the same process:
     //spotify
@@ -30,7 +31,8 @@ switch (process.argv[2]) {
         break;
     //OMDB
     case inputArray[2]:
-        console.log("omdb");
+        var movie = parseArg(process.argv);
+        movieThis(movie);
         break;
     //no input
     case inputArray[3]:
@@ -44,9 +46,7 @@ switch (process.argv[2]) {
 
 //functions for each type of request
 
-//bands in town
-
-function bandsInTown(input) {
+function concertThis(input) {
     //construct query URL
     var queryURL = "https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp";
     axios.get(queryURL).then(function (response) {
@@ -64,17 +64,17 @@ function bandsInTown(input) {
 
             //only display region if it is populated:
             if (region === '') {
-                console.log("\n--------------\n");
+                console.log("\n===============================\n");
                 console.log(
                     "Venue: " + venue +
                     '\n' + "City: " + city +
                     '\n' + "Country: " + country +
                     '\n' + "Date: " + date
                 );
-                console.log("\n--------------\n");
+                console.log("\n===============================\n");
 
             } else {
-                console.log("\n--------------\n");
+                console.log("\n===============================\n");
                 console.log(
                     "Venue: " + venue +
                     '\n' + "City: " + city +
@@ -82,7 +82,7 @@ function bandsInTown(input) {
                     '\n' + "Country: " + country +
                     '\n' + "Date: " + date
                 );
-                console.log("\n--------------\n");
+                console.log("\n===============================\n");
             }
 
         }
@@ -135,13 +135,49 @@ function spotifyThisSong(input) {
 
 }
 
-//function to parse artist/song/movie inputs (handles inputs that aren't in quotation 
-//marks)
+function movieThis(input) {
+    var movie = input;
+    if (movie === 'undefined' || null || movie === '') {
+        movie = 'Mr. Nobody'
+    }
+    var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+
+    axios.get(queryURL).then(
+        function (response) {
+            console.log("Movie Title: " + response.data.Title +
+                "\nYear Released: " + response.data.Year +
+                "\nIMDB Rating: " + response.data.imdbRating +
+                "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value +
+                "\nProduced in: " + response.data.Country +
+                "\nLanguage: " + response.data.Language +
+                "\nPlot: " + response.data.Plot +
+                "\nActors: " + response.data.Actors +
+                "\n===============================");
+        })
+        .catch(function (error) {
+            if (error.response) {
+                console.log("---------------Data---------------");
+                console.log(error.response.data);
+                console.log("---------------Status---------------");
+                console.log(error.response.status);
+                console.log("---------------Status---------------");
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log("Error", error.message);
+            }
+            console.log(error.config);
+        });
+}
+
+//function to parse artist/song/movie inputs (handles inputs that aren't in quotes
 
 function parseArg(searchParam) {
     var arg = '';
     for (var i = 3; i < searchParam.length; i++) {
         arg += ' ' + searchParam[i];
     }
+    arg = arg.trim(); //trim any leading spaces (this is needed for the bands in town API)
     return arg;
 }
